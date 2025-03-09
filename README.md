@@ -44,6 +44,80 @@ aws lambda create-function \
 
 ### - API Gateway 
 
+- Create API (copy APP ID in response)
+```
+aws apigateway create-rest-api \
+  --name "NotificationAPI" \
+  --description "API for sending notifications" \
+  --region us-east-1
+```
+
+- Get Resource ID (copy in response)
+```
+aws apigateway get-resources \
+  --rest-api-id <APP_ID> \
+  --region us-east-1
+
+```
+
+- Create resource (Copy the new resource ID)
+```
+aws apigateway create-resource \
+  --rest-api-id <APP_ID> \
+  --parent-id <RESOURCE_ID> \
+  --path-part notifications \
+  --region us-east-1
+```
+
+- Create POST method
+```
+aws apigateway put-method \
+  --rest-api-id <APP_ID> \
+  --resource-id <NEW_RESOURCE_ID> \
+  --http-method POST \
+  --request-parameters "method.request.header.apikey=true" \
+  --region us-east-1
+  --authorization-type "NONE"
+```
+
+- Integrate resource to call Lambda
+```
+aws apigateway put-integration \
+  --rest-api-id <APP_ID> \
+  --resource-id <NEW_RESOURCE_ID> \
+  --http-method POST \
+  --type AWS_PROXY \
+  --integration-http-method POST \
+  --uri arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:<ACCOUNT_NAME>:function:LambdaNotificationReceiver/invocations
+  --request-parameters "integration.request.header.apikey=method.request.header.apikey" \
+  --region us-east-1
+```
+
+- Add permission for API Gateway to invoke Lambda:
+```
+aws lambda add-permission \
+  --function-name LambdaNotificationReceiver \
+  --statement-id apigateway-invoke \
+  --action lambda:InvokeFunction \
+  --principal apigateway.amazonaws.com \
+  --source-arn "arn:aws:execute-api:us-east-1:<ACCOUNT_NAME>:<APP_ID>/*/POST/notifications" \
+  --region us-east-1
+```
+
+- Deploy API
+```
+aws apigateway create-deployment \
+  --rest-api-id <APP_ID> \
+  --stage-name prod \
+  --region us-east-1
+```
+
+- Test it:
+curl -X POST \
+  https://a1b2c3d4.execute-api.us-east-1.amazonaws.com/prod/notifications \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Go Developer", "title": "New Feature", "body": "Check out our latest update!"}'
+
 
 ## Build & Deploy
 - Do it with make
