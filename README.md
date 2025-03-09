@@ -1,5 +1,9 @@
 # NOTIFICATION RECEIVER LAMBDA
 
+## Creating AWS Infra - Run just once:
+
+### - Lambda
+
 - Create role:
 ```
 aws iam create-role \
@@ -28,17 +32,6 @@ aws iam attach-role-policy \
 aws iam get-role --role-name MyLambdaExecutionRole
 ```
 
-- Build project:
-```
-GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -tags lambda.norpc -o bootstrap main.go
-
-```
-
-- Zip function:
-```
-zip function.zip bootstrap
-```
-
 - Create function:
 ```
 aws lambda create-function \
@@ -49,14 +42,17 @@ aws lambda create-function \
     --zip-file fileb://function.zip
 ```
 
+### - API Gateway 
+
+
+## Build & Deploy
+- Do it with make
+```
+make lambda
+```
+
 - Test it !
 ```
-aws lambda invoke --function-name LambdaNotificationReceiver --payload '{"name": "Go Developer"}' response.json --cli-binary-format raw-in-base64-out
-cat response.json
+aws lambda invoke --function-name LambdaNotificationReceiver --payload '{"title":"Tenha o Gemini na sua tela inicial","body":"Instale o app Gemini para acessar todos os recursos pela tela inicial","app":"Google"} output.json --cli-binary-format raw-in-base64-out
+cat output.json
 ```
-
-- Update function:
-```
-aws lambda update-function-code --function-name LambdaNotificationReceiver --zip-file fileb://function.zip
-```
-

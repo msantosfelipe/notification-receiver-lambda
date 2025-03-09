@@ -1,7 +1,7 @@
 package config
 
 import (
-	"log"
+	"fmt"
 	"msantosfelipe/notification-receiver-lambda/domain"
 	"os"
 	"strings"
@@ -14,14 +14,13 @@ var PUSH_NOTIFICATION_ENV domain.PushNotification
 
 func InitVars() {
 	// Load .env file
+	// local will use .env, in AWS will use os env vars
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatalf("Error loading .env file")
+		fmt.Println(err)
 	}
 
 	ENV = domain.Config{
-		API_PREFIX:     os.Getenv("API_PREFIX"),
-		PORT:           os.Getenv("PORT"),
 		VALID_API_KEY:  os.Getenv("VALID_API_KEY"),
 		ALLOW_ALL_APPS: parseBool(os.Getenv("ALLOW_ANY_APP")),
 		ALLOWED_APPS:   parseList(os.Getenv("ALLOWED_APPS")),
@@ -29,7 +28,6 @@ func InitVars() {
 	}
 
 	PUSH_NOTIFICATION_ENV = domain.PushNotification{
-		ENABLE_PUSHOVER:         parseBool(os.Getenv("ENABLE_PUSHOVER_NOTIFICATION")),
 		PUSH_OVER_APP_TOKEN:     os.Getenv("PUSH_OVER_APP_TOKEN"),
 		PUSH_OVER_APP_RECIPIENT: os.Getenv("PUSH_OVER_APP_RECIPIENT"),
 	}

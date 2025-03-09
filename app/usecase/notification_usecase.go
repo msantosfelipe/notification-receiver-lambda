@@ -20,13 +20,13 @@ func NewNotificationUsecase(
 	}
 }
 
-func (uc *usecase) ProcessNotification(notification domain.Notification) {
+func (uc *usecase) ProcessNotification(notification domain.Notification) error {
 	if err := validateNotification(notification); err != nil {
 		fmt.Println(err)
-		return
+		return err
 	}
 
-	uc.pushNotificationSender.PushNotification(
+	return uc.pushNotificationSender.PushNotification(
 		fmt.Sprintf("%s: - %s", notification.Name, notification.Body),
 	)
 }

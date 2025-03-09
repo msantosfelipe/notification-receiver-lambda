@@ -12,7 +12,7 @@ type pushNotificationSender struct {
 }
 
 type PushNotificationSender interface {
-	PushNotification(notificationText string)
+	PushNotification(notificationText string) error
 }
 
 func NewPushNotificationSender() PushNotificationSender {
@@ -21,18 +21,15 @@ func NewPushNotificationSender() PushNotificationSender {
 	}
 }
 
-func (pns *pushNotificationSender) PushNotification(notificationText string) {
-	pns.PushOverlPushNotification(notificationText)
-}
-
-func (pns *pushNotificationSender) PushOverlPushNotification(notificationText string) {
+func (pns *pushNotificationSender) PushNotification(notificationText string) error {
 	recipient := pushover.NewRecipient(config.PUSH_NOTIFICATION_ENV.PUSH_OVER_APP_RECIPIENT)
 	message := pushover.NewMessage(notificationText)
 
 	response, err := pns.pushOverClient.SendMessage(message, recipient)
 	if err != nil {
-		log.Panic(err)
+		return err
 	}
 
 	log.Println(response)
+	return nil
 }
