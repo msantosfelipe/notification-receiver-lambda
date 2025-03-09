@@ -7,5 +7,5 @@ type Notification struct {
 }
 
 type NotificationUsecase interface {
-	ProcessNotification(notification Notification) error
+	ProcessNotification(notification *Notification) error
 }

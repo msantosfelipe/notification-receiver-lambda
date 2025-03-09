@@ -1,18 +1,24 @@
 package lambda
 
 import (
-	"context"
 	"encoding/json"
+	"errors"
 	"fmt"
+	"msantosfelipe/notification-receiver-lambda/config"
 	"msantosfelipe/notification-receiver-lambda/domain"
+	"net/http"
+
+	"github.com/aws/aws-lambda-go/events"
 )
+
+const apiKeyValidationHeader = "apikey"
 
 type notificationHandler struct {
 	notificationUc domain.NotificationUsecase
 }
 
 type NotificationHandler interface {
-	ProcessNotification(ctx context.Context, event map[string]interface{}) error
+	ProcessNotification(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error)
 }
 
 func NewNotificationHandler(notificationUc domain.NotificationUsecase) NotificationHandler {
@@ -21,24 +27,51 @@ func NewNotificationHandler(notificationUc domain.NotificationUsecase) Notificat
 	}
 }
 
-func (handler *notificationHandler) ProcessNotification(ctx context.Context, event map[string]interface{}) error {
-	eventJSON, err := json.Marshal(event)
-	if err != nil {
-		fmt.Println("Error marshalling:", err)
-		return err
+func (handler *notificationHandler) ProcessNotification(request events.APIGatewayProxyRequest) (events.APIGatewayProxyResponse, error) {
+	if !isAuthorized(request.Headers) {
+		fmt.Println("Unauthorized - invalid apiKey in headers: ", request.Headers)
+		return errorResponse(http.StatusUnauthorized, errors.New("is unauthorized"))
 	}
 
-	var notification domain.Notification
-	err = json.Unmarshal(eventJSON, &notification)
+	notification, err := extractNotificationBody(request.Body)
 	if err != nil {
-		fmt.Println("Error unmarshalling:", err)
-		return err
+		fmt.Println("Error extracting notification body:", err)
+		return errorResponse(http.StatusBadRequest, err)
 	}
 
 	if err := handler.notificationUc.ProcessNotification(notification); err != nil {
 		fmt.Println("Error processing notification:", err)
-		return err
+		return errorResponse(http.StatusInternalServerError, err)
 	}
 
-	return nil
+	return events.APIGatewayProxyResponse{
+		Body:       string("OK"),
+		StatusCode: http.StatusOK,
+	}, nil
+}
+
+func errorResponse(statusCode int, err error) (events.APIGatewayProxyResponse, error) {
+	return events.APIGatewayProxyResponse{
+		StatusCode: statusCode,
+		Body:       err.Error(),
+	}, nil
+}
+
+func isAuthorized(headers map[string]string) bool {
+	apiKeyHeader := headers[apiKeyValidationHeader]
+	if apiKeyHeader != "" {
+		return apiKeyHeader == config.ENV.VALID_API_KEY
+	}
+	return false
+}
+
+func extractNotificationBody(body string) (*domain.Notification, error) {
+	bodyBytes := []byte(body)
+	var notification domain.Notification
+	err := json.Unmarshal(bodyBytes, &notification)
+	if err != nil {
+		return nil, err
+	}
+
+	return &notification, nil
 }

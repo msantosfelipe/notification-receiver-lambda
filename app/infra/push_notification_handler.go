@@ -1,7 +1,7 @@
 package infra
 
 import (
-	"log"
+	"fmt"
 	"msantosfelipe/notification-receiver-lambda/config"
 
 	"github.com/gregdel/pushover"
@@ -30,6 +30,6 @@ func (pns *pushNotificationSender) PushNotification(notificationText string) err
 		return err
 	}
 
-	log.Println(response)
+	fmt.Println(response)
 	return nil
 }

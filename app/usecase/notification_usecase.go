@@ -5,7 +5,7 @@ import (
 	"msantosfelipe/notification-receiver-lambda/config"
 	"msantosfelipe/notification-receiver-lambda/domain"
 	"msantosfelipe/notification-receiver-lambda/infra"
-	"strings"
+	"slices"
 )
 
 type usecase struct {
@@ -20,9 +20,9 @@ func NewNotificationUsecase(
 	}
 }
 
-func (uc *usecase) ProcessNotification(notification domain.Notification) error {
+func (uc *usecase) ProcessNotification(notification *domain.Notification) error {
 	if err := validateNotification(notification); err != nil {
-		fmt.Println(err)
+		fmt.Println("Error validating notification:", err)
 		return err
 	}
 
@@ -31,7 +31,7 @@ func (uc *usecase) ProcessNotification(notification domain.Notification) error {
 	)
 }
 
-func validateNotification(notification domain.Notification) error {
+func validateNotification(notification *domain.Notification) error {
 	if err := isValidApp(notification.Name); err != nil {
 		return err
 	}
@@ -46,10 +46,8 @@ func isValidApp(appName string) error {
 		return nil
 	}
 
-	for _, i := range config.ENV.ALLOWED_APPS {
-		if i == appName {
-			return nil
-		}
+	if slices.Contains(config.ENV.ALLOWED_APPS, appName) {
+		return nil
 	}
 	return fmt.Errorf("invalid app name: %s", appName)
 }
@@ -59,10 +57,8 @@ func isValidTitle(appName, title string) error {
 		return nil
 	}
 
-	for _, i := range config.ENV.ALLOWED_TITLES {
-		if strings.Contains(i, title) {
-			return nil
-		}
+	if slices.Contains(config.ENV.ALLOWED_TITLES, title) {
+		return nil
 	}
 	return fmt.Errorf("invalid title name: %s of app %s", title, appName)
 }

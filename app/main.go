@@ -1,8 +1,6 @@
 package main
 
 import (
-	"context"
-	"fmt"
 	"msantosfelipe/notification-receiver-lambda/config"
 	handler "msantosfelipe/notification-receiver-lambda/handlers/lambda"
 	"msantosfelipe/notification-receiver-lambda/infra"
@@ -22,10 +20,6 @@ func setup() Setup {
 	return Setup{
 		notificationHandler: handler.NewNotificationHandler(uc),
 	}
-}
-
-func Handler(ctx context.Context, event map[string]interface{}) (string, error) {
-	return fmt.Sprintf("Hello, %v!", event["name"]), nil
 }
 
 func main() {
