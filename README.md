@@ -76,7 +76,7 @@ aws apigateway put-method \
   --resource-id <NEW_RESOURCE_ID> \
   --http-method POST \
   --request-parameters "method.request.header.apikey=true" \
-  --region us-east-1
+  --region us-east-1 \
   --authorization-type "NONE"
 ```
 
@@ -88,7 +88,7 @@ aws apigateway put-integration \
   --http-method POST \
   --type AWS_PROXY \
   --integration-http-method POST \
-  --uri arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:<ACCOUNT_NAME>:function:LambdaNotificationReceiver/invocations
+  --uri arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:<ACCOUNT_NAME>:function:LambdaNotificationReceiver/invocations \
   --request-parameters "integration.request.header.apikey=method.request.header.apikey" \
   --region us-east-1
 ```
@@ -114,9 +114,9 @@ aws apigateway create-deployment \
 
 - Test it:
 curl -X POST \
-  https://a1b2c3d4.execute-api.us-east-1.amazonaws.com/prod/notifications \
+  https://<APP_ID>.execute-api.us-east-1.amazonaws.com/prod/notifications \
   -H "Content-Type: application/json" \
-  -d '{"name": "Go Developer", "title": "New Feature", "body": "Check out our latest update!"}'
+  -d '{"title":"Tenha o Gemini na sua tela inicial","body":"Instale o app Gemini para acessar todos os recursos pela tela inicial","app":"Google"}'
 
 
 ## Build & Deploy
