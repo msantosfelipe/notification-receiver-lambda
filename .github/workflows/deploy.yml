@@ -30,13 +30,13 @@ jobs:
         with:
           go-version: '1.24.1'
 
-      - name: Build lambda
+      - name: Build Lambda
         run: |
           cd app/ && GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -tags lambda.norpc -o ../build/bootstrap main.go
           cd ../build/ && zip function.zip bootstrap
 
-      - name: Fazer upload para o Lambda
+      - name: Upload Lambda
         run: |
           aws lambda update-function-code \
             --function-name ${{ secrets.LAMBDA_FUNCTION_NAME }} \
-            --zip-file fileb://function.zip
+            --zip-file fileb://build/function.zip
