@@ -1,6 +1,7 @@
 package config
 
 import (
+	"encoding/json"
 	"fmt"
 	"msantosfelipe/notification-receiver-lambda/domain"
 	"os"
@@ -18,6 +19,14 @@ func InitVars() {
 	err := godotenv.Load()
 	if err != nil {
 		fmt.Println(err)
+	}
+
+	appsAllowedJson := os.Getenv("APPS_ALLOWED_JSON")
+	var apps []domain.AppAllowed
+
+	err = json.Unmarshal([]byte(appsAllowedJson), &apps)
+	if err != nil {
+		fmt.Println("Error parsing APPS_ALLOWED_JSON:", err)
 	}
 
 	ENV = domain.Config{

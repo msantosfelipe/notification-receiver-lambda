@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"msantosfelipe/notification-receiver-lambda/config"
 	handler "msantosfelipe/notification-receiver-lambda/handlers/lambda"
 	"msantosfelipe/notification-receiver-lambda/infra"
@@ -23,6 +24,7 @@ func setup() Setup {
 }
 
 func main() {
+	fmt.Println("x1")
 	config.InitVars()
 	setup := setup()
 
