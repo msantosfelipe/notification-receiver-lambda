@@ -33,7 +33,7 @@ jobs:
       - name: Build lambda
         run: |
           cd app/ && GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -tags lambda.norpc -o ../build/bootstrap main.go
-          cd build/ && zip function.zip bootstrap
+          cd ../build/ && zip function.zip bootstrap
 
       - name: Fazer upload para o Lambda
         run: |
