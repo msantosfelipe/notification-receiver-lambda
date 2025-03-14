@@ -33,7 +33,10 @@ func (uc *usecase) ProcessNotification(notification *domain.Notification) error 
 
 func validateNotification(notification *domain.Notification) error {
 	for _, i := range config.ENV.APPS_ALLOWED {
+		fmt.Println("ENV.APPS_ALLOWED - ", i.App)
 		if i.App == notification.AppName {
+			fmt.Println("AppName - ", i.App)
+			fmt.Println("AppName_FullyAllowed - ", i.FullyAllowed)
 			if i.FullyAllowed {
 				return nil
 			}
