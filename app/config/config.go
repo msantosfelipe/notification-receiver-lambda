@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"msantosfelipe/notification-receiver-lambda/domain"
 	"os"
-	"strings"
 
 	"github.com/joho/godotenv"
 )
@@ -21,21 +20,11 @@ func InitVars() {
 		fmt.Println(err)
 	}
 
-	appsAllowedJson := os.Getenv("APPS_ALLOWED_JSON")
-	var appsAllowed []domain.AppAllowed
-
-	err = json.Unmarshal([]byte(appsAllowedJson), &appsAllowed)
-	if err != nil {
-		fmt.Println("Error parsing APPS_ALLOWED_JSON:", err)
-	}
-
 	ENV = domain.Config{
 		IS_LOCAL:       parseBool(os.Getenv("IS_LOCAL")),
 		VALID_API_KEY:  os.Getenv("VALID_API_KEY"),
 		ALLOW_ALL_APPS: parseBool(os.Getenv("ALLOW_ANY_APP")),
-		APPS_ALLOWED:   appsAllowed,
-		ALLOWED_APPS:   parseList(os.Getenv("ALLOWED_APPS")),
-		ALLOWED_TITLES: parseList(os.Getenv("ALLOWED_TITLES")),
+		APPS_ALLOWED:   parseApps(os.Getenv("APPS_ALLOWED_JSON")),
 	}
 
 	PUSH_NOTIFICATION_ENV = domain.PushNotification{
@@ -44,8 +33,14 @@ func InitVars() {
 	}
 }
 
-func parseList(value string) []string {
-	return strings.Split(value, ",")
+func parseApps(appsAllowedJson string) []domain.AppAllowed {
+	var appsAllowed []domain.AppAllowed
+
+	err := json.Unmarshal([]byte(appsAllowedJson), &appsAllowed)
+	if err != nil {
+		fmt.Println("Error parsing APPS_ALLOWED_JSON:", err)
+	}
+	return appsAllowed
 }
 
 func parseBool(value string) bool {

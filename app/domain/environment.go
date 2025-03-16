@@ -5,8 +5,6 @@ type Config struct {
 	VALID_API_KEY  string
 	ALLOW_ALL_APPS bool
 	APPS_ALLOWED   []AppAllowed
-	ALLOWED_APPS   []string
-	ALLOWED_TITLES []string
 }
 
 type AppAllowed struct {
