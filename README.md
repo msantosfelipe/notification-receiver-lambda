@@ -1,6 +1,6 @@
 # NOTIFICATION RECEIVER LAMBDA
 
-This is a new version of the problem described the article [A personalized notification system with Macrodroid, Golang and OneSignal](https://msantosfelipe.medium.com/how-do-i-stay-informed-and-keep-my-data-safe-fe2d20c52247)
+This is a new and simpler version of the problem described in the article [A personalized notification system with Macrodroid, Golang and OneSignal](https://msantosfelipe.medium.com/how-do-i-stay-informed-and-keep-my-data-safe-fe2d20c52247)
 
 This Lambda Golang app consumes events triggered by [Macrodoid](https://www.macrodroid.com/). They are processed and sent to [Pushover app](https://pushover.net/)
 
