@@ -1,5 +1,23 @@
 # NOTIFICATION RECEIVER LAMBDA
 
+This is a new version of the problem described the article [A personalized notification system with Macrodroid, Golang and OneSignal](https://msantosfelipe.medium.com/how-do-i-stay-informed-and-keep-my-data-safe-fe2d20c52247)
+
+This Lambda Golang app consumes events triggered by [Macrodoid](https://www.macrodroid.com/). They are processed and sent to [Pushover app](https://pushover.net/)
+
+## Build & Deploy
+#### Github actions is available, the action starts on merge to branch `master`
+
+#### - To deploy with AWS CLI the commands are in Makefile:
+```
+make lambda
+```
+
+- Test it !
+```
+aws lambda invoke --function-name LambdaNotificationReceiver --payload '{"title":"Tenha o Gemini na sua tela inicial","body":"Instale o app Gemini para acessar todos os recursos pela tela inicial","app":"Google"} output.json --cli-binary-format raw-in-base64-out
+cat output.json
+```
+
 ## Creating AWS Infra - Run just once:
 
 ### - Lambda
@@ -117,16 +135,3 @@ curl -X POST \
   https://<APP_ID>.execute-api.us-east-1.amazonaws.com/prod/notifications \
   -H "Content-Type: application/json" \
   -d '{"title":"Tenha o Gemini na sua tela inicial","body":"Instale o app Gemini para acessar todos os recursos pela tela inicial","app":"Google"}'
-
-
-## Build & Deploy
-- Do it with make
-```
-make lambda
-```
-
-- Test it !
-```
-aws lambda invoke --function-name LambdaNotificationReceiver --payload '{"title":"Tenha o Gemini na sua tela inicial","body":"Instale o app Gemini para acessar todos os recursos pela tela inicial","app":"Google"} output.json --cli-binary-format raw-in-base64-out
-cat output.json
-```
