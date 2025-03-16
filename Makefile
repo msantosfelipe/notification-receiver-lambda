@@ -11,3 +11,6 @@ clear:
 
 update_lambda:
 	aws lambda update-function-code --function-name LambdaNotificationReceiver --zip-file fileb://build/function.zip
+
+local:
+	cd app/ && go run .

@@ -22,16 +22,18 @@ func InitVars() {
 	}
 
 	appsAllowedJson := os.Getenv("APPS_ALLOWED_JSON")
-	var apps []domain.AppAllowed
+	var appsAllowed []domain.AppAllowed
 
-	err = json.Unmarshal([]byte(appsAllowedJson), &apps)
+	err = json.Unmarshal([]byte(appsAllowedJson), &appsAllowed)
 	if err != nil {
 		fmt.Println("Error parsing APPS_ALLOWED_JSON:", err)
 	}
 
 	ENV = domain.Config{
+		IS_LOCAL:       parseBool(os.Getenv("IS_LOCAL")),
 		VALID_API_KEY:  os.Getenv("VALID_API_KEY"),
 		ALLOW_ALL_APPS: parseBool(os.Getenv("ALLOW_ANY_APP")),
+		APPS_ALLOWED:   appsAllowed,
 		ALLOWED_APPS:   parseList(os.Getenv("ALLOWED_APPS")),
 		ALLOWED_TITLES: parseList(os.Getenv("ALLOWED_TITLES")),
 	}

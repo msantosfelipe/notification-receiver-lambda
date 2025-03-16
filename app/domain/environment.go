@@ -1,6 +1,7 @@
 package domain
 
 type Config struct {
+	IS_LOCAL       bool
 	VALID_API_KEY  string
 	ALLOW_ALL_APPS bool
 	APPS_ALLOWED   []AppAllowed

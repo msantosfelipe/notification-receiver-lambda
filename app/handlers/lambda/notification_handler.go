@@ -11,7 +11,7 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 )
 
-const apiKeyValidationHeader = "apikey"
+const ApiKeyValidationHeader = "apikey"
 
 type notificationHandler struct {
 	notificationUc domain.NotificationUsecase
@@ -58,7 +58,7 @@ func errorResponse(statusCode int, err error) (events.APIGatewayProxyResponse, e
 }
 
 func isAuthorized(headers map[string]string) bool {
-	apiKeyHeader := headers[apiKeyValidationHeader]
+	apiKeyHeader := headers[ApiKeyValidationHeader]
 	if apiKeyHeader != "" {
 		return apiKeyHeader == config.ENV.VALID_API_KEY
 	}
