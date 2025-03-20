@@ -27,7 +27,7 @@ func (uc *usecase) ProcessNotification(notification *domain.Notification) error 
 	}
 
 	return uc.pushNotificationSender.PushNotification(
-		fmt.Sprintf("%s: - %s", notification.AppName, notification.Body),
+		fmt.Sprintf("%s: %s - %s", notification.AppName, notification.Title, notification.Body),
 	)
 }
 

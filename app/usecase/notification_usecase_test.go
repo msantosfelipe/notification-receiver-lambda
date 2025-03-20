@@ -39,7 +39,7 @@ func TestProcessNotification_Success(t *testing.T) {
 		},
 	}
 
-	mockSender.On("PushNotification", "XP: - new notification arrived").Return(nil)
+	mockSender.On("PushNotification", "XP: Unit test - new notification arrived").Return(nil)
 
 	err := uc.ProcessNotification(&notification)
 
