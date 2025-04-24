@@ -3,14 +3,14 @@ package config
 import (
 	"encoding/json"
 	"fmt"
-	"msantosfelipe/notification-receiver-lambda/domain"
+	"msantosfelipe/notification-receiver-lambda/internal/domain"
 	"os"
 
 	"github.com/joho/godotenv"
 )
 
 var ENV domain.Config
-var PUSH_NOTIFICATION_ENV domain.PushNotification
+var PushNotificationEnv domain.PushNotification
 
 func InitVars() {
 	// Load .env file
@@ -21,15 +21,15 @@ func InitVars() {
 	}
 
 	ENV = domain.Config{
-		IS_LOCAL:       parseBool(os.Getenv("IS_LOCAL")),
-		VALID_API_KEY:  os.Getenv("VALID_API_KEY"),
-		ALLOW_ALL_APPS: parseBool(os.Getenv("ALLOW_ANY_APP")),
-		APPS_ALLOWED:   parseApps(os.Getenv("APPS_ALLOWED_JSON")),
+		IsLocal:      parseBool(os.Getenv("IS_LOCAL")),
+		ValidApiKey:  os.Getenv("VALID_API_KEY"),
+		AllowAllApps: parseBool(os.Getenv("ALLOW_ANY_APP")),
+		AppsAllowed:  parseApps(os.Getenv("APPS_ALLOWED_JSON")),
 	}
 
-	PUSH_NOTIFICATION_ENV = domain.PushNotification{
-		PUSH_OVER_APP_TOKEN:     os.Getenv("PUSH_OVER_APP_TOKEN"),
-		PUSH_OVER_APP_RECIPIENT: os.Getenv("PUSH_OVER_APP_RECIPIENT"),
+	PushNotificationEnv = domain.PushNotification{
+		PushOverAppToken:     os.Getenv("PUSH_OVER_APP_TOKEN"),
+		PushOverAppRecipient: os.Getenv("PUSH_OVER_APP_RECIPIENT"),
 	}
 }
 

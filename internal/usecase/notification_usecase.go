@@ -2,9 +2,9 @@ package usecase
 
 import (
 	"fmt"
-	"msantosfelipe/notification-receiver-lambda/config"
-	"msantosfelipe/notification-receiver-lambda/domain"
-	"msantosfelipe/notification-receiver-lambda/infra"
+	"msantosfelipe/notification-receiver-lambda/internal/config"
+	"msantosfelipe/notification-receiver-lambda/internal/domain"
+	"msantosfelipe/notification-receiver-lambda/internal/infra"
 	"slices"
 )
 
@@ -32,7 +32,7 @@ func (uc *usecase) ProcessNotification(notification *domain.Notification) error 
 }
 
 func validateNotification(notification *domain.Notification) error {
-	for _, i := range config.ENV.APPS_ALLOWED {
+	for _, i := range config.ENV.AppsAllowed {
 		if i.App == notification.AppName {
 			if i.FullyAllowed {
 				return nil

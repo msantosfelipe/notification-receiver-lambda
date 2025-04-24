@@ -2,7 +2,7 @@ package infra
 
 import (
 	"fmt"
-	"msantosfelipe/notification-receiver-lambda/config"
+	"msantosfelipe/notification-receiver-lambda/internal/config"
 
 	"github.com/gregdel/pushover"
 )
@@ -17,12 +17,12 @@ type PushNotificationSender interface {
 
 func NewPushNotificationSender() PushNotificationSender {
 	return &pushNotificationSender{
-		pushOverClient: pushover.New(config.PUSH_NOTIFICATION_ENV.PUSH_OVER_APP_TOKEN),
+		pushOverClient: pushover.New(config.PushNotificationEnv.PushOverAppToken),
 	}
 }
 
 func (pns *pushNotificationSender) PushNotification(notificationText string) error {
-	recipient := pushover.NewRecipient(config.PUSH_NOTIFICATION_ENV.PUSH_OVER_APP_RECIPIENT)
+	recipient := pushover.NewRecipient(config.PushNotificationEnv.PushOverAppRecipient)
 	message := pushover.NewMessage(notificationText)
 
 	response, err := pns.pushOverClient.SendMessage(message, recipient)

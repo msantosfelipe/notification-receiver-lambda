@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
-	"msantosfelipe/notification-receiver-lambda/config"
-	handler "msantosfelipe/notification-receiver-lambda/handlers/lambda"
-	"msantosfelipe/notification-receiver-lambda/infra"
-	"msantosfelipe/notification-receiver-lambda/usecase"
+	"msantosfelipe/notification-receiver-lambda/internal/config"
+	handler "msantosfelipe/notification-receiver-lambda/internal/handlers/lambda"
+	"msantosfelipe/notification-receiver-lambda/internal/infra"
+	"msantosfelipe/notification-receiver-lambda/internal/usecase"
 
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
@@ -19,7 +19,7 @@ func main() {
 	config.InitVars()
 	setup := setup()
 
-	if config.ENV.IS_LOCAL {
+	if config.ENV.IsLocal {
 		fmt.Println("Running in local mode...")
 		runLocal(setup)
 	} else {
@@ -38,7 +38,7 @@ func setup() Setup {
 
 func runLocal(setup Setup) {
 	request := events.APIGatewayProxyRequest{
-		Headers: map[string]string{handler.ApiKeyValidationHeader: config.ENV.VALID_API_KEY},
+		Headers: map[string]string{handler.ApiKeyValidationHeader: config.ENV.ValidApiKey},
 		Body:    "{\"title\":\"Testetitle\",\"body\":\"Testebody\",\"app\":\"XP Investimentos\"}",
 	}
 	response, err := setup.notificationHandler.ProcessNotification(request)

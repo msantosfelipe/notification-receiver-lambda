@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"msantosfelipe/notification-receiver-lambda/config"
-	"msantosfelipe/notification-receiver-lambda/domain"
+	"msantosfelipe/notification-receiver-lambda/internal/config"
+	"msantosfelipe/notification-receiver-lambda/internal/domain"
 	"net/http"
 
 	"github.com/aws/aws-lambda-go/events"
@@ -45,7 +45,7 @@ func (handler *notificationHandler) ProcessNotification(request events.APIGatewa
 	}
 
 	return events.APIGatewayProxyResponse{
-		Body:       string("OK"),
+		Body:       "OK",
 		StatusCode: http.StatusOK,
 	}, nil
 }
@@ -60,7 +60,7 @@ func errorResponse(statusCode int, err error) (events.APIGatewayProxyResponse, e
 func isAuthorized(headers map[string]string) bool {
 	apiKeyHeader := headers[ApiKeyValidationHeader]
 	if apiKeyHeader != "" {
-		return apiKeyHeader == config.ENV.VALID_API_KEY
+		return apiKeyHeader == config.ENV.ValidApiKey
 	}
 	return false
 }

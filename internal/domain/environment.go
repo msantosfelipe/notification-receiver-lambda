@@ -1,10 +1,10 @@
 package domain
 
 type Config struct {
-	IS_LOCAL       bool
-	VALID_API_KEY  string
-	ALLOW_ALL_APPS bool
-	APPS_ALLOWED   []AppAllowed
+	IsLocal      bool
+	ValidApiKey  string
+	AllowAllApps bool
+	AppsAllowed  []AppAllowed
 }
 
 type AppAllowed struct {
@@ -14,6 +14,6 @@ type AppAllowed struct {
 }
 
 type PushNotification struct {
-	PUSH_OVER_APP_TOKEN     string
-	PUSH_OVER_APP_RECIPIENT string
+	PushOverAppToken     string
+	PushOverAppRecipient string
 }
