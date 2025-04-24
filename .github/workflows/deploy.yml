@@ -31,17 +31,18 @@ jobs:
           go-version: '1.24.1'
 
       - name: Install dependencies
-        run: |
-          cd app/ && go mod tidy
+        run: go mod tidy
+        working-directory: cmd/
 
       - name: Run tests
-        run: |
-          cd app/ && go test ./...
+        run: go test ./...
+        working-directory: cmd/
 
       - name: Build Lambda
         run: |
-          cd cmd/ && GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -tags lambda.norpc -o ../build/bootstrap main.go
+          GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -tags lambda.norpc -o ../build/bootstrap main.go
           cd ../build/ && zip function.zip bootstrap
+        working-directory: cmd/
 
       - name: Upload Lambda
         run: |
